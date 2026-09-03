@@ -1,1 +1,10 @@
-.agents/
+.env
+.env.test
+data/
+bin/
+coverage/
+web/dist/
+web/node_modules/
+*.log
+.DS_Store
+Thumbs.db
