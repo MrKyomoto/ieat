@@ -1,0 +1,7 @@
+.floor-section + .floor-section {
+  margin-top: 24px;
+}
+
+.window-card {
+  height: 100%;
+}

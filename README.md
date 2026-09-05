@@ -99,4 +99,4 @@ go vet ./...
 npm --prefix web run build
 ```
 
-以后需要测试 PostgreSQL 时，再将 `.env` 中的 `DATA_BACKEND` 改为 `postgres` 并配置 `DATABASE_URL`；当前阶段无需处理。项目规则和已确认设计见 [CONTEXT.md](CONTEXT.md)、[架构决策](docs/adr/) 和 [TODO.md](TODO.md)。
+以后需要测试 PostgreSQL 时，再将 `.env` 中的 `DATA_BACKEND` 改为 `postgres` 并配置 `DATABASE_URL`；当前阶段无需处理。项目规则和已确认设计见 [CONTEXT.md](CONTEXT.md)、[架构决策](docs/adr/) 和 [TODO.md](TODO.md)，前端目录约定见 [web/README.md](web/README.md)。

@@ -6,6 +6,7 @@
 
 - 后端保持 Go + Chi + pgx + PostgreSQL 模块化单体，不增加微服务、ORM、通用数据库适配层或 JWT。
 - 前端保持 React + TypeScript + Vite + Ant Design 单套响应式 Web，不维护独立移动端项目。
+- 前端依赖方向保持 `web/src/app → web/src/features → web/src/shared`；功能模块不直接互相引用，跨模块流程由 `app` 组装。
 - 身份来源和消费流水格式是明确的可变边界；其他位置不要为假设中的未来需求添加接口或工厂。
 - 金额使用整数分，时间入库使用 UTC、展示和经营统计使用北京时间。
 - 上传文件写入 `UPLOAD_DIR`，数据库不保存图片二进制。
