@@ -1,80 +1,71 @@
 # IEat 校园食堂评价
 
-IEat 是面向校内成员的食堂窗口评价社区和管理平台。首版采用 Go + Chi + pgx + PostgreSQL 后端，以及 React + TypeScript + Vite + Ant Design 响应式前端，整体以模块化单体开发。
+IEat 是校内食堂窗口评价社区，同时提供食堂管理后台。目前默认使用内存 Mock 数据，**手动测试不需要安装 PostgreSQL**。
 
-## 开发环境
+## 1. 准备环境
 
 请先安装：
 
-- Git
 - Go 1.26 或更高版本
-- Node.js 22.12 或更高版本；推荐 Node.js 24 LTS
-- npm（随 Node.js 安装）
-- PostgreSQL 16～18
+- Node.js 22.12 或更高版本（自带 npm）
+- Git
 
-Go 的当前稳定版本和支持策略见 [Go Release History](https://go.dev/doc/devel/release)，Node.js 应选择仍在维护的 LTS 版本，见 [Node.js Releases](https://nodejs.org/en/about/previous-releases)。本项目使用的 Vite 要求 Node.js 20.19+ 或 22.12+，见 [Vite 8](https://vite.dev/blog/announcing-vite8)。PostgreSQL 各主版本支持周期见 [PostgreSQL Versioning Policy](https://www.postgresql.org/support/versioning/)。
-
-Linux 还需要 Bash；Windows 启动脚本使用系统自带的 PowerShell。开发脚本只管理项目依赖和进程，不安装上述系统软件。
-
-## 准备 PostgreSQL
-
-使用 PostgreSQL 管理员账号执行：
-
-```sql
-CREATE ROLE ieat WITH LOGIN PASSWORD 'ieat';
-CREATE DATABASE ieat_dev OWNER ieat;
-CREATE DATABASE ieat_test OWNER ieat;
-```
-
-Arch Linux/Omarchy 可以通过下面的命令进入 PostgreSQL：
-
-```bash
-sudo -iu postgres psql
-```
-
-Windows 通常使用安装 PostgreSQL 时设置的管理员密码：
+可用下面的命令确认：
 
 ```powershell
-psql -U postgres
+go version
+node --version
+npm --version
 ```
 
-这些账号和密码只用于个人开发环境，请勿用于试运行或生产部署。
-
-## 首次启动
-
-复制环境配置：
-
-```bash
-cp .env.example .env
-```
-
-Windows PowerShell：
+首次克隆后手动准备项目配置和前端依赖。Windows PowerShell：
 
 ```powershell
 Copy-Item .env.example .env
+npm.cmd --prefix web install
 ```
 
-按需修改 `.env` 中的 `DATABASE_URL`。随后运行对应脚本：
+Linux：
 
 ```bash
-./scripts/dev.sh
+cp .env.example .env
+npm --prefix web install
 ```
+
+如果 `.env` 已存在，不要覆盖。启动脚本只启动对应进程，不检查环境、不安装依赖。
+
+## 2. 分别启动前后端
+
+打开两个终端。在 Windows PowerShell 中分别运行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\dev.ps1
+# 终端一：后端
+powershell -ExecutionPolicy Bypass -File .\scripts\backend.ps1
+
+# 终端二：前端
+powershell -ExecutionPolicy Bypass -File .\scripts\frontend.ps1
 ```
 
-脚本会下载项目依赖、执行数据库迁移、初始化开发数据，并同时启动：
+Linux：
+
+```bash
+# 终端一：后端
+bash ./scripts/backend.sh
+
+# 终端二：前端
+bash ./scripts/frontend.sh
+```
+
+启动后访问：
 
 - 前端：http://localhost:5173
-- 后端：http://localhost:8080
-- 健康检查：http://localhost:8080/healthz
+- 后端健康检查：http://localhost:8080/healthz
 
-按 `Ctrl+C` 可以停止前后端。
+修改前端代码后，Vite 会自动刷新页面。修改后端代码后，只需在后端终端按 `Ctrl+C`，再重新运行后端脚本。两个进程分别使用 `Ctrl+C` 停止。
 
-## 开发账号
+## 3. 登录账号
 
-开发环境关闭注册和邮件发送。运行启动脚本后可使用以下账号登录，密码默认为 `.env` 中的 `DEV_SEED_PASSWORD`：
+三个账号的密码都是 `ieat-dev-only`。
 
 | 角色 | 邮箱 |
 | --- | --- |
@@ -82,36 +73,30 @@ powershell -ExecutionPolicy Bypass -File .\scripts\dev.ps1
 | 管理部门人员 | `manager@ustc.edu.cn` |
 | 平台管理员 | `admin@ustc.edu.cn` |
 
-开发数据初始化只允许在 `APP_ENV=development` 时执行。
+## 4. 手动测试清单
 
-## 常用命令
+- 使用普通用户登录，确认能看到“示例食堂”、两层楼和两个示例窗口。
+- 退出后使用管理部门人员登录，确认页面显示对应角色和经营看板入口。
+- 使用平台管理员登录，确认页面显示平台管理入口。
+- 在浏览器开发者工具中切换到手机尺寸（例如宽度 390px），检查页面和导航是否正常适配。
+- 访问健康检查地址，确认返回 `{\"status\":\"ok\"}`。
+
+Mock 数据只保存在当前后端进程中，重启后会恢复初始状态。
+
+## 常见问题
+
+- 提示缺少 `go`、`node` 或 `npm`：先安装对应开发环境，并重新打开终端。
+- 前端提示缺少依赖：先运行 `npm.cmd --prefix web install`；Linux 使用 `npm --prefix web install`。
+- 端口占用：关闭占用 `5173` 或 `8080` 端口的程序后重试。
+- 登录返回 `403`：确认使用的是 `http://localhost:5173`，并检查 `.env` 中 `WEB_ORIGIN=http://localhost:5173`。
+- 意外连接数据库：检查 `.env` 中是否为 `DATA_BACKEND=mock`。
+
+## 开发检查
 
 ```bash
-go run ./cmd/migrate
-go run ./cmd/seed
-go run ./cmd/api
 go test ./...
 go vet ./...
-npm --prefix web run dev
 npm --prefix web run build
 ```
 
-数据库集成测试应使用独立的 `ieat_test` 数据库，不要清空 `ieat_dev`。
-
-## 目录
-
-```text
-cmd/                    Go 可执行程序入口
-internal/auth/          登录、会话与访问身份
-internal/catalog/       食堂、楼层和窗口目录
-internal/database/      PostgreSQL 连接与迁移
-internal/devseed/       仅开发环境可用的固定数据
-internal/httpapi/       HTTP 路由和通用中间件
-web/                    React 响应式前端
-scripts/                Linux 与 Windows 开发脚本
-docs/adr/               已确认的架构决定
-CONTEXT.md              领域词汇和业务规则
-TODO.md                 模块任务及负责人
-```
-
-开发时先阅读 [CONTEXT.md](CONTEXT.md)、[架构决定](docs/adr/) 和 [TODO.md](TODO.md)。
+以后需要测试 PostgreSQL 时，再将 `.env` 中的 `DATA_BACKEND` 改为 `postgres` 并配置 `DATABASE_URL`；当前阶段无需处理。项目规则和已确认设计见 [CONTEXT.md](CONTEXT.md)、[架构决策](docs/adr/) 和 [TODO.md](TODO.md)。

@@ -1,5 +1,6 @@
 .env
 .env.test
+.cache/
 data/
 bin/
 coverage/

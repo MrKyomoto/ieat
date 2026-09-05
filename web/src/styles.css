@@ -1,0 +1,133 @@
+:root {
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #17352b;
+  background: #f4f6f3;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.centered-page,
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.login-page {
+  padding: 24px;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(213, 239, 221, 0.9), transparent 35%),
+    linear-gradient(135deg, #f7faf5 0%, #e8f1ec 100%);
+}
+
+.login-card {
+  width: min(100%, 420px);
+  box-shadow: 0 20px 60px rgba(31, 65, 52, 0.12);
+}
+
+.login-heading,
+.page-stack {
+  width: 100%;
+}
+
+.login-heading {
+  margin-bottom: 20px;
+}
+
+.login-heading h1 {
+  margin: 8px 0 0;
+}
+
+.login-error {
+  margin-bottom: 18px;
+}
+
+.dev-hint {
+  display: block;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.app-layout {
+  min-height: 100vh;
+}
+
+.app-header {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  padding-inline: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid #e6ece8;
+  backdrop-filter: blur(12px);
+}
+
+.brand-avatar {
+  background: #146b51;
+  font-weight: 700;
+}
+
+.brand-name {
+  color: #17352b;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.app-sider {
+  background: #fff;
+  border-right: 1px solid #e6ece8;
+}
+
+.app-sider .ant-menu {
+  position: sticky;
+  top: 80px;
+  border-inline-end: 0;
+}
+
+.app-content {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.page-stack h2 {
+  margin-bottom: 4px;
+}
+
+.floor-section + .floor-section {
+  margin-top: 24px;
+}
+
+.window-card {
+  height: 100%;
+}
+
+@media (max-width: 991px) {
+  .app-header {
+    padding-inline: 16px;
+  }
+
+  .app-content {
+    padding: 20px 16px 80px;
+  }
+
+  .app-sider {
+    display: none;
+  }
+}
